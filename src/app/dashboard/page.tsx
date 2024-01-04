@@ -36,47 +36,65 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-const data: Payment[] = [
+const data: Entry[] = [
   {
-    id: "m5gr84i9",
-    amount: 316,
-    status: "success",
-    email: "ken99@yahoo.com",
+    id: "1",
+    name: "john doe",
+    email: "johndoe@gmail.com",
+    phone: "0648245852",
+    file: "cv.pdf",
+    status: "waiting",
+    created: "08/12/2012"
   },
   {
-    id: "3u1reuv4",
-    amount: 242,
-    status: "success",
-    email: "Abe45@gmail.com",
+    id: "2",
+    name: "jane doe",
+    email: "janedoe@gmail.com",
+    phone: "0698542245",
+    file: "curuculiuom.pdf",
+    status: "waiting",
+    created: "10/10/2010"
   },
   {
-    id: "derv1ws0",
-    amount: 837,
-    status: "processing",
-    email: "Monserrat44@gmail.com",
+    id: "3",
+    name: "henk de boer",
+    email: "henk@gmail.com",
+    phone: "0687775964",
+    file: "importantfile.pdf",
+    status: "withdrawn",
+    created: "12/03/2020"
   },
   {
-    id: "5kma53ae",
-    amount: 874,
-    status: "success",
-    email: "Silas22@gmail.com",
+    id: "4",
+    name: "johan van der plas",
+    email: "johanvdp@hotmail.com",
+    phone: "0612345678",
+    file: "notlinkedin.pdf",
+    status: "shared",
+    created: "10/10/2010"
   },
   {
-    id: "bhqecj4p",
-    amount: 721,
-    status: "failed",
-    email: "carmella@hotmail.com",
+    id: "5",
+    name: "gerrit",
+    email: "gerrit@gmail.com",
+    phone: "0606060606",
+    file: "cv2.3.4.5.pdf",
+    status: "waiting",
+    created: "06/12/2019"
   },
 ]
 
-export type Payment = {
+export type Entry = {
   id: string
-  amount: number
-  status: "pending" | "processing" | "success" | "failed"
+  name: string
   email: string
+  phone: string
+  file: string
+  status: "waiting" | "shared" | "withdrawn"  
+  created: string
 }
 
-export const columns: ColumnDef<Payment>[] = [
+export const columns: ColumnDef<Entry>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -100,47 +118,49 @@ export const columns: ColumnDef<Payment>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => (
-      <div className="capitalize">{row.getValue("status")}</div>
-    ),
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => <div style={{ textTransform: 'capitalize' }}>{row.getValue("name")}</div>,
   },
   {
     accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
+  },
+  {
+    accessorKey: "phone",
+    header: "Phone",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
+  },
+  {
+    accessorKey: "file",
+    header: "File",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("file")}</div>,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => <div className="lowercase">{row.getValue("status")}</div>,
+  },
+  {
+    accessorKey: "created",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Email
+          Created
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
-  {
-    accessorKey: "amount",
-    header: () => <div className="text-right">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
-
-      // Format the amount as a dollar amount
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(amount)
-
-      return <div className="text-right font-medium">{formatted}</div>
     },
   },
   {
     id: "actions",
     enableHiding: false,
     cell: ({ row }) => {
-      const payment = row.original
+      const entry = row.original
 
       return (
         <DropdownMenu>
@@ -153,13 +173,20 @@ export const columns: ColumnDef<Payment>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(payment.id)}
+              onClick={() => navigator.clipboard.writeText(entry.email)}
             >
-              Copy payment ID
+              Copy Email
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(entry.phone)}
+            >
+              Copy Phone number
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
+            <DropdownMenuLabel>Manage</DropdownMenuLabel>
+            <DropdownMenuItem>View cv</DropdownMenuItem>
+            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem>Change data</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -167,7 +194,7 @@ export const columns: ColumnDef<Payment>[] = [
   },
 ]
 
-export default function DataTableDemo() {
+export default function DataTable() {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -199,10 +226,10 @@ export default function DataTableDemo() {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Search name..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
