@@ -19,3 +19,7 @@ export async function getEntries() {
     })
     return rows
 }
+
+export async function saveEntry(data: { name: string, email: string, phone: string, file:string }) {
+    const [rows] = await (await db).execute('INSERT INTO entries (name, email, phone, file, status) VALUES (?, ?, ?, ?, ?)', [data.name, data.email, data.phone, data.file, "waiting"])
+}

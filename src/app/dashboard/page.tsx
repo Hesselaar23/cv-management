@@ -7,4 +7,3 @@ export default async function Page(){
   const data = await getEntries()
   return <DataTable data={data}></DataTable>
 }
-

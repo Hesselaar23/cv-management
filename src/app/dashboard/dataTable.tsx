@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Upload } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/table"
 
 import { Entry } from "@/lib/types"
+import { UploadDialog } from "./uploadDialog"
 
 export const columns: ColumnDef<Entry>[] = [
   {
@@ -74,11 +75,6 @@ export const columns: ColumnDef<Entry>[] = [
     accessorKey: "phone",
     header: "Phone",
     cell: ({ row }) => <div className="lowercase">{row.getValue("phone")}</div>,
-  },
-  {
-    accessorKey: "file",
-    header: "File",
-    cell: ({ row }) => <div className="lowercase">{row.getValue("file")}</div>,
   },
   {
     accessorKey: "status",
@@ -187,6 +183,7 @@ export function DataTable({data}:{data:Entry[]}) {
             }
             className="max-w-sm"
           />
+          <UploadDialog />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="ml-auto">
