@@ -2,6 +2,8 @@
 
 import mysql from 'mysql2/promise'
 import { Entry } from './types';
+import { join } from 'path';
+import fs from 'fs';
 
 const db = mysql.createConnection({
     host: 'localhost',
@@ -25,5 +27,16 @@ export async function saveEntry(data: { name: string, email: string, phone: stri
 }
 
 export async function deleteEntryById(id: string) {
-    const [rows] = await (await db).execute('DELETE FROM entries WHERE id = ?', [id]);
+    const [r] = await (await db).execute('SELECT * FROM entries WHERE id = ?', [id]);
+    const rows = r as Entry[]
+    const entry = rows[0]
+    
+    if (entry) {
+        const currentDirectory = process.cwd();
+        const path = join(currentDirectory, 'cv-files', entry.file)
+        fs.unlinkSync(path)
+        await (await db).execute('DELETE FROM entries WHERE id = ?', [id]);
+      } else {
+        throw new Error("entry does not exist")
+      }
 }

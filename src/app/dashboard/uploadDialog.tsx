@@ -12,9 +12,11 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 
 export function UploadDialog() {
+    const router = useRouter();
     const [open, setOpen] = useState(false)
     const [file, setFile] = useState<File>()
     const [name, setName] = useState<string>()
@@ -40,6 +42,7 @@ export function UploadDialog() {
           } catch (e: any) {
             console.error(e)
           }
+        router.refresh()
     }
   return (
     <Dialog open={open} onOpenChange={setOpen}>

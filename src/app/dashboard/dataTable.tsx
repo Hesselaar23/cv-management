@@ -39,6 +39,7 @@ import { Entry } from "@/lib/types"
 import { UploadDialog } from "./uploadDialog"
 import { DeleteAlertDialog } from "./deleteAlertDialog"
 import { deleteEntryById } from "@/lib/databaseUtils"
+import { useRouter } from "next/navigation"
 
 function generateCVUrl(cvFileName: string): string {
   return `/api/view/${cvFileName}`;
@@ -135,7 +136,9 @@ export const columns: ColumnDef<Entry>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const entry = row.original
+      const router = useRouter();
       return (
+        
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -164,7 +167,10 @@ export const columns: ColumnDef<Entry>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>Share cv</DropdownMenuItem>
             <DropdownMenuItem
-              onClick={() => deleteEntry(entry)}
+              onClick={async() => {
+                await deleteEntry(entry)
+                router.refresh()
+              }}
             >
               Delete
             </DropdownMenuItem>
