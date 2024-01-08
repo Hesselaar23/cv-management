@@ -37,6 +37,29 @@ import {
 
 import { Entry } from "@/lib/types"
 import { UploadDialog } from "./uploadDialog"
+import { DeleteAlertDialog } from "./deleteAlertDialog"
+import { deleteEntryById } from "@/lib/databaseUtils"
+
+function generateCVUrl(cvFileName: string): string {
+  return `/api/view/${cvFileName}`;
+}
+
+function viewCV(entry: Entry) {
+  const cvFileName = entry.file;
+  if (cvFileName) {
+    const cvUrl = generateCVUrl(cvFileName);
+
+    window.open(cvUrl, '_blank');
+
+  } else {
+    console.error("CV file name is missing in the entry.");
+  }
+}
+
+async function deleteEntry(entry: Entry) {
+  const id = entry.id;
+  await deleteEntryById(id)
+}
 
 export const columns: ColumnDef<Entry>[] = [
   {
@@ -112,10 +135,9 @@ export const columns: ColumnDef<Entry>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const entry = row.original
-
       return (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+          <DropdownMenuTrigger>
             <Button variant="ghost" className="h-8 w-8 p-0">
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
@@ -135,8 +157,17 @@ export const columns: ColumnDef<Entry>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuLabel>Manage</DropdownMenuLabel>
-            <DropdownMenuItem>View cv</DropdownMenuItem>
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => viewCV(entry)}
+            >
+              View cv
+            </DropdownMenuItem>
+            <DropdownMenuItem>Share cv</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => deleteEntry(entry)}
+            >
+              Delete
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -145,6 +176,7 @@ export const columns: ColumnDef<Entry>[] = [
 ]
 
 export function DataTable({data}:{data:Entry[]}) {
+
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
       []
