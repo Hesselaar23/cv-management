@@ -15,7 +15,7 @@ import {
   export function DeleteAlertDialog({ id }: { id: string }) {
     return (
       <AlertDialog>
-        <AlertDialogTrigger asChild>
+        <AlertDialogTrigger>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>

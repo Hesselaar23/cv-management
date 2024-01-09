@@ -40,6 +40,7 @@ import { UploadDialog } from "./uploadDialog"
 import { DeleteAlertDialog } from "./deleteAlertDialog"
 import { deleteEntryById } from "@/lib/databaseUtils"
 import { useRouter } from "next/navigation"
+import { AlertDialogHeader } from "@/components/ui/alert-dialog"
 
 function generateCVUrl(cvFileName: string): string {
   return `/api/view/${cvFileName}`;
@@ -167,6 +168,7 @@ export const columns: ColumnDef<Entry>[] = [
             </DropdownMenuItem>
             <DropdownMenuItem>Share cv</DropdownMenuItem>
             <DropdownMenuItem
+              
               onClick={async() => {
                 await deleteEntry(entry)
                 router.refresh()
