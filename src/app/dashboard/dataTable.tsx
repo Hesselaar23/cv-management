@@ -58,11 +58,6 @@ function viewCV(entry: Entry) {
   }
 }
 
-async function deleteEntry(entry: Entry) {
-  const id = entry.id;
-  await deleteEntryById(id)
-}
-
 export const columns: ColumnDef<Entry>[] = [
   {
     id: "select",
@@ -139,7 +134,6 @@ export const columns: ColumnDef<Entry>[] = [
       const entry = row.original
       const router = useRouter();
       return (
-        
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -167,15 +161,7 @@ export const columns: ColumnDef<Entry>[] = [
               View cv
             </DropdownMenuItem>
             <DropdownMenuItem>Share cv</DropdownMenuItem>
-            <DropdownMenuItem
-              
-              onClick={async() => {
-                await deleteEntry(entry)
-                router.refresh()
-              }}
-            >
-              Delete
-            </DropdownMenuItem>
+            <DeleteAlertDialog entry={entry} />
           </DropdownMenuContent>
         </DropdownMenu>
       )

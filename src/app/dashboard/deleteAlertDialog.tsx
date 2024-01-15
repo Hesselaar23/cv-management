@@ -11,11 +11,24 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
+import { deleteEntryById } from "@/lib/databaseUtils";
+import { Entry } from "@/lib/types";
+import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { useRouter } from "next/navigation";
 
-  export function DeleteAlertDialog({ id }: { id: string }) {
+  async function deleteEntry(entry: Entry) {
+    const id = entry.id;
+    await deleteEntryById(id)
+  }
+
+  export function DeleteAlertDialog({ entry }: { entry: Entry }) {
+    const router = useRouter();
     return (
       <AlertDialog>
         <AlertDialogTrigger>
+          <DropdownMenuItem>
+            Delete
+          </DropdownMenuItem>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -27,7 +40,14 @@ import {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Delete</AlertDialogAction>
+            <AlertDialogAction
+              onClick={async() => {
+                await deleteEntry(entry)
+                router.refresh()
+              }}
+            >
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
