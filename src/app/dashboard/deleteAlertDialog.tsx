@@ -9,24 +9,30 @@ import {
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
-    AlertDialogTrigger,
   } from "@/components/ui/alert-dialog"
 import { deleteEntryById } from "@/lib/databaseUtils";
 import { Entry } from "@/lib/types";
-import { DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useRouter } from "next/navigation";
+import { Dispatch, SetStateAction } from "react";
 
   async function deleteEntry(entry: Entry) {
     const id = entry.id;
     await deleteEntryById(id)
   }
 
-  export function DeleteAlertDialog({ entry }: { entry: Entry }) {
+  export function DeleteAlertDialog(
+    {
+      open, 
+      setOpen, 
+      entry
+    }: {
+      open: boolean; 
+      setOpen :Dispatch<SetStateAction<boolean>>;
+      entry: Entry 
+    }) {
     const router = useRouter();
     return (
-      <AlertDialog>
-        <AlertDialogTrigger>
-        </AlertDialogTrigger>
+      <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

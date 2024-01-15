@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Upload } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -39,8 +39,6 @@ import { Entry } from "@/lib/types"
 import { UploadDialog } from "./uploadDialog"
 import { DeleteAlertDialog } from "./deleteAlertDialog"
 import { deleteEntryById } from "@/lib/databaseUtils"
-import { useRouter } from "next/navigation"
-import { AlertDialogHeader } from "@/components/ui/alert-dialog"
 
 function generateCVUrl(cvFileName: string): string {
   return `/api/view/${cvFileName}`;
@@ -56,6 +54,11 @@ function viewCV(entry: Entry) {
   } else {
     console.error("CV file name is missing in the entry.");
   }
+}
+
+async function deleteEntry(entry: Entry) {
+  const id = entry.id;
+  await deleteEntryById(id)
 }
 
 export const columns: ColumnDef<Entry>[] = [
@@ -132,45 +135,51 @@ export const columns: ColumnDef<Entry>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const entry = row.original
-      const router = useRouter();
+      const [open, setOpen] = React.useState(false)
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(entry.email)}
-            >
-              Copy Email
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(entry.phone)}
-            >
-              Copy Phone number
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuLabel>Manage</DropdownMenuLabel>
-            <DropdownMenuItem 
-              onClick={() => viewCV(entry)}
-            >
-              View cv
-            </DropdownMenuItem>
-            <DropdownMenuItem>Share cv</DropdownMenuItem>
-            <DeleteAlertDialog entry={entry} />
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(entry.email)}
+              >
+                Copy Email
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(entry.phone)}
+              >
+                Copy Phone number
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuLabel>Manage</DropdownMenuLabel>
+              <DropdownMenuItem 
+                onClick={() => viewCV(entry)}
+              >
+                View cv
+              </DropdownMenuItem>
+              <DropdownMenuItem>Share cv</DropdownMenuItem>
+              <DropdownMenuItem
+                  onClick={() => setOpen(true)}
+                >
+                Delete
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          <DeleteAlertDialog {...{open, setOpen, entry}}/>
+        </>
       )
     },
   },
 ]
 
 export function DataTable({data}:{data:Entry[]}) {
-
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
       []
