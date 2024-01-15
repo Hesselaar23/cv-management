@@ -26,9 +26,6 @@ import { useRouter } from "next/navigation";
     return (
       <AlertDialog>
         <AlertDialogTrigger>
-          <DropdownMenuItem>
-            Delete
-          </DropdownMenuItem>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
