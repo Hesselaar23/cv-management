@@ -39,6 +39,7 @@ import { Entry } from "@/lib/types"
 import { UploadDialog } from "./uploadDialog"
 import { DeleteAlertDialog } from "./deleteAlertDialog"
 import { deleteEntryById } from "@/lib/databaseUtils"
+import { ShareDialog } from "./shareDialog"
 
 function generateCVUrl(cvFileName: string): string {
   return `/api/view/${cvFileName}`;
@@ -135,7 +136,8 @@ export const columns: ColumnDef<Entry>[] = [
     enableHiding: false,
     cell: ({ row }) => {
       const entry = row.original
-      const [open, setOpen] = React.useState(false)
+      const [openDelete, setDeleteOpen] = React.useState(false)
+      const [openShare, setShareOpen] = React.useState(false)
       return (
         <>
           <DropdownMenu>
@@ -164,15 +166,20 @@ export const columns: ColumnDef<Entry>[] = [
               >
                 View cv
               </DropdownMenuItem>
-              <DropdownMenuItem>Share cv</DropdownMenuItem>
               <DropdownMenuItem
-                  onClick={() => setOpen(true)}
+                  onClick={() => setShareOpen(true)}
+                >
+                Share cv
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                  onClick={() => setDeleteOpen(true)}
                 >
                 Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DeleteAlertDialog {...{open, setOpen, entry}}/>
+          <DeleteAlertDialog {...{openDelete, setDeleteOpen, entry}}/>
+          <ShareDialog {...{openShare, setShareOpen}}/>
         </>
       )
     },

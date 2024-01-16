@@ -22,17 +22,17 @@ import { Dispatch, SetStateAction } from "react";
 
   export function DeleteAlertDialog(
     {
-      open, 
-      setOpen, 
+      openDelete, 
+      setDeleteOpen, 
       entry
     }: {
-      open: boolean; 
-      setOpen :Dispatch<SetStateAction<boolean>>;
+      openDelete: boolean; 
+      setDeleteOpen :Dispatch<SetStateAction<boolean>>;
       entry: Entry 
     }) {
     const router = useRouter();
     return (
-      <AlertDialog open={open} onOpenChange={setOpen}>
+      <AlertDialog open={openDelete} onOpenChange={setDeleteOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>

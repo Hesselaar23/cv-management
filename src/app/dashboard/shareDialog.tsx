@@ -12,49 +12,37 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Calendar } from "@/components/ui/calendar"
 import { Dispatch, SetStateAction } from "react";
+import React from "react"
 
 export function ShareDialog(
     {
-        open,
-        setOpen
+        openShare,
+        setShareOpen
     }: {
-        open: boolean;
-        setOpen: Dispatch<SetStateAction<boolean>>;
+        openShare: boolean;
+        setShareOpen: Dispatch<SetStateAction<boolean>>;
     }) {
+    
+    const [date, setDate] = React.useState<Date | undefined>(new Date())
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={openShare} onOpenChange={setShareOpen}>
+      <DialogContent className="sm:max-w-[425px] flex flex-col items-center">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
+          <DialogTitle>Share cv</DialogTitle>
           <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
+            Choose the date for the availability of the cv
           </DialogDescription>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="name" className="text-right">
-              Name
-            </Label>
-            <Input
-              id="name"
-              defaultValue="Pedro Duarte"
-              className="col-span-3"
+        <Calendar
+            mode="single"
+            selected={date}
+            onSelect={setDate}
+            className="rounded-md border"
             />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="username" className="text-right">
-              Username
-            </Label>
-            <Input
-              id="username"
-              defaultValue="@peduarte"
-              className="col-span-3"
-            />
-          </div>
-        </div>
         <DialogFooter>
-          <Button type="submit">Save changes</Button>
+          <Button type="submit">Get the link</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
