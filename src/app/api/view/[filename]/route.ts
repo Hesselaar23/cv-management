@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextApiRequest } from 'next';
 import fs from 'fs';
 import path from 'path';
 import { NextResponse } from 'next/server';
